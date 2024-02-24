@@ -1,82 +1,143 @@
-<!-- (c) adarsh-goel-->
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Play Files</title>
 
-<head>
     <meta charset="UTF-8">
-    <meta property="og:image" content="https://i.ibb.co/M8S0Zzj/live-streaming.png" itemprop="thumbnailUrl">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>%s</title>
-    <link rel="stylesheet" type='text/css' href="https://adarsh-goel.github.io/resources/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Delius">
+    <meta http-equiv="X-Frame-Options" content="deny">
 
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-</head>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
-<body class='cyber'>
-    <header>
-        <div class="toogle"></div>
-        <div id="file-name" class="cyber">
-            <marquee direction="left"> %s</marquee>
-        </div>
-    </header>
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+        background-color: #add8e6; /* Light blue background */
+      }
 
-    <div class="container">
-        <a href=%s>
-            <button class="cybr-btn">
-                Download
-                <span aria-hidden>_</span>
-                <span aria-hidden class="cybr-btn__glitch">_404 Error</span>
-                <span aria-hidden class="cybr-btn__tag">_%s</span>
-            </button>
-        </a>
-    </div>
+      #stream-media {
+        height: 100%;
+        width: 100%;
+      }
 
-    <footer>
-        <center>
-            <a href="https://telegram.me/THE_DS_OFFICIAL>
-                <h3 style="color: black; text-align: center;">DEVELPOER</h3>
-            </a>
-        </center>
+      #error-message {
+        color: red;
+        font-size: 24px;
+        text-align: center;
+        margin-top: 20px;
+      }
 
-    </footer>
+      .plyr__video-wrapper .plyr-download-button,
+      .plyr__video-wrapper .plyr-share-button {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 30px;
+        z-index: 10;
+      }
 
+      .plyr__video-wrapper .plyr-download-button {
+        top: 10px;
+        left: 10px;
+        background-color: #007BFF; /* Blue button background */
+        color: white;
+      }
 
-    <script src="https://cdn.plyr.io/3.6.12/plyr.js"></script>
+      .plyr__video-wrapper .plyr-share-button {
+        top: 50px;
+        left: 10px;
+        background-color: #0056b3; /* Darker blue button background */
+        color: white;
+      }
+
+      .plyr__video-wrapper .plyr-download-button:hover,
+      .plyr__video-wrapper .plyr-share-button:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        color: white;
+      }
+
+      .plyr__video-wrapper .plyr-download-button:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f019";
+        font-weight: bold;
+      }
+
+      .plyr__video-wrapper .plyr-share-button:before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f064";
+        font-weight: bold;
+      }
+
+      .plyr, .plyr__video-wrapper, .plyr__video-embed iframe {
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <video id="stream-media" controls preload="auto">
+      <source src="" type="">
+      <p class="vjs-no-js">
+        To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+      </p>
+    </video>
+
+    <div id="error-message"></div>
+
     <script>
-        const controls = [
-            'play-large',
-            'rewind',
-            'play',
-            'fast-forward',
-            'progress',
-            'current-time',
-            'duration',
-            'mute',
-            'volume',
-            'captions',
-            'settings',
-            'pip',
-            'airplay',
-            'download',
-            'fullscreen'
-        ];
-        document.addEventListener('DOMContentLoaded', () => {
-            const player = Plyr.setup('.player', { controls });
-        });
+      var player = new Plyr('#stream-media', {
+          controls:['play-large', 'rewind', 'play', 'fast-forward', 'progress', 'current-time', 'mute', 'settings', 'pip', 'fullscreen'],
+          settings:['speed','loop'],
+          speed:{selected:1,options:[0.25,0.5,0.75,1,1.25,1.5,1.75,2]},
+          seek: 10,
+          keyboard: { focused: true, global: true },
+      });
 
-        const body = document.querySelector('body');
-        const title = document.querySelector('#file-name');
-        const footer = document.querySelector('footer');
-        const toogle = document.querySelector('.toogle');
-        toogle.onclick = () => {
-            body.classList.toggle('dark')
-            footer.classList.toggle('dark')
-            title.classList.toggle('dark')
-        }
+      var mediaLink = "{{ mediaLink }}";
+
+      if (mediaLink) {
+          document.querySelector('#stream-media source').setAttribute('src', mediaLink);
+          player.restart();
+
+          var downloadButton = document.createElement('div');
+          downloadButton.className = 'plyr-download-button';
+
+          downloadButton.onclick = function() {
+            event.stopPropagation();
+            var link = document.createElement('a');
+            link.href = mediaLink;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          };
+
+          player.elements.container.querySelector('.plyr__video-wrapper').appendChild(downloadButton);
+
+          var shareButton = document.createElement('div');
+          shareButton.className = 'plyr-share-button';
+
+          shareButton.onclick = function() {
+            event.stopPropagation();
+            if (navigator.share) {
+              navigator.share({
+                title: "Play",
+                url: mediaLink
+              });
+            }
+          };
+
+          player.elements.container.querySelector('.plyr__video-wrapper').appendChild(shareButton);
+
+      } else {
+          document.getElementById('error-message').textContent = 'Error: Media URL not provided';
+      }
     </script>
-</body>
 
+  </body>
 </html>
