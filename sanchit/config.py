@@ -12,7 +12,7 @@ class Telegram:
     SECRET_CODE_LENGTH = int(env.get("SECRET_CODE_LENGTH", 12))
 
 class Server:
-    BASE_URL = env.get("BASE_URL", "")
+    BASE_URL = env.get("BASE_URL", "https://leech-with-silent-0233e98bcbd6.herokuapp.com")
     BIND_ADDRESS = env.get("BIND_ADDRESS", "0.0.0.0")
     PORT = int(env.get("PORT", 8080))
 
