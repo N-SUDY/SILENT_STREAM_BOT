@@ -6,7 +6,6 @@ from sanchit import Sanchit
 from sanchit.utils.database import Database
 from sanchit.utils.human_readable import humanbytes
 from sanchit.config import Telegram, Server
-from urllib.parse import quote_plus
 from pyrogram import filters, Client
 from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
