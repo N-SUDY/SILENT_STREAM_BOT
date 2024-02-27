@@ -115,9 +115,9 @@ async def gen_link_handler(event):
         if reply_message and (reply_message.document or reply_message.video or reply_message.audio or reply_message.photo):
             media = await reply_message.get_file()
             file_name = media.name
-            file_path = await media.download(file_name)
+           # file_path = await media.download(file_name)
 
-            log_msg = await client.send_file(channel_id, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'))
+            log_msg = await client.send_file(channel_id, caption=msg_text.format(file_name, humanbytes(media.size), f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'))
             os.remove(file_path)
             await event.reply(text=msg_text.format(file_name, humanbytes(media.size), f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'), reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]]))
         else:
