@@ -21,7 +21,7 @@ msg_text ="""<b>‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
 
 ‣ Tʜɪꜱ Iꜱ Aɴ Aᴅᴠᴀɴᴄᴇ Fɪʟᴇ Sᴛʀᴇᴀᴍ Bᴏᴛ Bʏ : [Tʜᴇ Sɪʟᴇɴᴛ Tᴇᴀᴍ](https://t.me/THE_SILENT_TEAMS) </b> 😆"""
 
-@Sanchit.on_message(filters.command("link"))
+@Sanchit.on(NewMessage(incoming=True, pattern=r'^/link$'))
 async def gen_link_handler(bot, message):
     try:
         media = message.reply_to_message
