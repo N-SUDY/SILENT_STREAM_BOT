@@ -1,6 +1,7 @@
 #(©) 𝚂𝙰𝙽𝙲𝙷𝙸𝚃 ♛⛧
 import os
 import asyncio
+from telethon.events import NewMessage
 from asyncio import TimeoutError
 from sanchit import Sanchit
 from sanchit.utils.database import Database
