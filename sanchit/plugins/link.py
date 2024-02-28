@@ -121,7 +121,7 @@ async def gen_link_handler(event):
             log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'))
             os.remove(file_path)
 
-            await event.reply(text=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}')) # reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]]))
+            await event.reply(text=msg_text.format(file_name), humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}', reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]])
         else:
             await event.reply("Reply to a valid media file with /link to generate a download link.")
     except Exception as e:
