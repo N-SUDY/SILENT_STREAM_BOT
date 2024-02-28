@@ -70,7 +70,6 @@ async def gen_link_handler(event):
             file_path = await reply_message.download_media(file_name)
             secret_code = token_hex(Telegram.SECRET_CODE_LENGTH)
             event.message.text = f'`{secret_code}`'
-            message = await send_message(event.message)
             message_id = message.id
 
             log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'))
