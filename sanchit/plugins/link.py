@@ -13,8 +13,15 @@ from pyrogram.errors import FloodWait, UserNotParticipant
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from sanchit.utils.file_properties import get_name, get_hash, get_media_file_size
 
+base_url = Server.BASE_URL
+
 msg_text ="""<b>‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
 
+‣ Fɪʟᴇ ɴᴀᴍᴇ : <i>{}</i>
+‣ Fɪʟᴇ ꜱɪᴢᴇ : {}
+
+🔻 <a href="{}">𝗙𝗔𝗦𝗧 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗</a>
+🔺 <a href="{}">𝗪𝗔𝗧𝗖𝗛 𝗢𝗡𝗟𝗜𝗡𝗘</a>
 
 ‣ Tʜɪꜱ Iꜱ Aɴ Aᴅᴠᴀɴᴄᴇ Fɪʟᴇ Sᴛʀᴇᴀᴍ Bᴏᴛ Bʏ : [Tʜᴇ Sɪʟᴇɴᴛ Tᴇᴀᴍ](https://t.me/THE_SILENT_TEAMS) </b> 😆"""
 
@@ -102,21 +109,20 @@ def get_media_file_size(message):
         return 0
 
 
-
 @Sanchit.on(events.NewMessage(pattern="/link"))
 async def gen_link_handler(event):
     try:
         reply_message = await event.get_reply_message()
         if reply_message and (reply_message.document or reply_message.video or reply_message.audio or reply_message.photo):
-            media = await reply_message.get_file()
+            media = reply_message.file
             file_name = media.name
-           # file_path = await media.download(file_name)
+            file_path = await reply_message.download_media(file_name)
 
-            log_msg = await client.send_file(channel_id, caption=msg_text.format(file_name, humanbytes(media.size), f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'))
+            log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'))
             os.remove(file_path)
-            await event.reply(text=msg_text, f'{base_url}/watch/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}', f'{base_url}/{reply_message.id}/{quote_plus(get_name(reply_message))}?hash={await get_hash(reply_message)}'), reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]])
+
+            await event.reply(text=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}', # reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]]))
         else:
             await event.reply("Reply to a valid media file with /link to generate a download link.")
     except Exception as e:
         await event.reply(f"Error generating link: {e}")
-
