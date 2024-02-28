@@ -18,13 +18,19 @@ from sanchit.modules.static import *
 
 base_url = Server.BASE_URL
 
+log_text ="""ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
+
+‣ Fɪʟᴇ ɴᴀᴍᴇ : {}
+‣ Fɪʟᴇ ꜱɪᴢᴇ : {}
+
+𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 : {}
+
+𝗪𝗔𝗧𝗖𝗛 𝗢𝗡𝗟𝗜𝗡𝗘 : {}"""
+
 msg_text ="""<b>‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
 
 ‣ Fɪʟᴇ ɴᴀᴍᴇ : <i>{}</i>
 ‣ Fɪʟᴇ ꜱɪᴢᴇ : {}
-
-🔻 <a href="{}">𝗙𝗔𝗦𝗧 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗</a>
-🔺 <a href="{}">𝗪𝗔𝗧𝗖𝗛 𝗢𝗡𝗟𝗜𝗡𝗘</a>
 
 ‣ Tʜɪꜱ Iꜱ Aɴ Aᴅᴠᴀɴᴄᴇ Fɪʟᴇ Sᴛʀᴇᴀᴍ Bᴏᴛ Bʏ : [Tʜᴇ Sɪʟᴇɴᴛ Tᴇᴀᴍ](https://t.me/THE_SILENT_TEAMS) </b> 😆"""
 
@@ -72,15 +78,10 @@ async def gen_link_handler(event):
             event.message.text = f'`{secret_code}`'
             message_id = message.id
 
-            log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'))
-            os.remove(file_path)
-
-            await event.reply(text=msg_text.format(file_name), humanbytes(media.size), f'{Server.BASE_URL}/file/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}', reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]])))
-
             stream_link = f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}'
             dl_link = f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'
             
-            log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), stream_link, dl_link))
+            log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=log_text.format(file_name, humanbytes(media.size), stream_link, dl_link))
             os.remove(file_path)
 
             await event.reply(msg_text.format(get_name(media)), humanbytes(media.size), stream_link, dl_link, reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺", url=stream_link), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻', url=dl_link)]]))
