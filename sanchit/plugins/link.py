@@ -76,7 +76,7 @@ async def gen_link_handler(event):
             log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'))
             os.remove(file_path)
 
-            await event.reply(text=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/file/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}', reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]]))
+            await event.reply(text=msg_text.format(file_name), humanbytes(media.size), f'{Server.BASE_URL}/file/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}', reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]]))
 
             stream_link = f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}'
             dl_link = f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'
