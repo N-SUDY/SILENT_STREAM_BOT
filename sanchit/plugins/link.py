@@ -2,7 +2,8 @@
 import os
 import asyncio
 from telethon.events import NewMessage
-from telethon import TelegramClient, events, types
+from telethon import TelegramClient, events
+from telethon.tl.custom import Button
 from asyncio import TimeoutError
 from sanchit import Sanchit
 from sanchit.utils.database import Database
@@ -16,17 +17,8 @@ from secrets import token_hex
 from sanchit.modules.telegram import send_message, filter_files
 from sanchit.modules.static import *
 
+
 base_url = Server.BASE_URL
-
-msg_text ="""<b>‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
-
-‣ Fɪʟᴇ ɴᴀᴍᴇ : <i>{}</i>
-‣ Fɪʟᴇ ꜱɪᴢᴇ : {}
-
-🔻 <a href="{}">𝗙𝗔𝗦𝗧 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗</a>
-🔺 <a href="{}">𝗪𝗔𝗧𝗖𝗛 𝗢𝗡𝗟𝗜𝗡𝗘</a>
-
-‣ Tʜɪꜱ Iꜱ Aɴ Aᴅᴠᴀɴᴄᴇ Fɪʟᴇ Sᴛʀᴇᴀᴍ Bᴏᴛ Bʏ : [Tʜᴇ Sɪʟᴇɴᴛ Tᴇᴀᴍ](https://t.me/THE_SILENT_TEAMS) </b> 😆"""
 
 def get_name(message):
     if message.file.name:
@@ -69,22 +61,24 @@ async def gen_link_handler(event):
             file_name = media.name
             file_path = await reply_message.download_media(file_name)
             secret_code = token_hex(Telegram.SECRET_CODE_LENGTH)
-            event.message.text = f'`{secret_code}`'
-            message = await send_message(event.message)
-            message_id = message.id
+            message_id = reply_message.id
+
+            msg_text = f"""**‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
+
+‣ Fɪʟᴇ ɴᴀᴍᴇ : __{get_name(reply_message)}__
+
+‣ Tʜɪꜱ Iꜱ Aɴ Aᴅᴠᴀɴᴄᴇ Fɪʟᴇ Sᴛʀᴇᴀᴍ Bᴏᴛ Bʏ : [Tʜᴇ Sɪʟᴇɴᴛ Tᴇᴀᴍ](https://t.me/THE_SILENT_TEAMS) ** 😆"""
+
 
             log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'))
-            os.remove(file_path)
-
-            await event.reply(text=msg_text.format(file_name, humanbytes(media.size), f'{Server.BASE_URL}/file/{message_id}?code={secret_code}', f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}', reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺"), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻')]])))
 
             stream_link = f'{Server.BASE_URL}/stream/{message_id}?code={secret_code}'
             dl_link = f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'
-            
+
             log_msg = await Sanchit.send_file(Telegram.CHANNEL_ID, file_path, caption=msg_text.format(file_name, humanbytes(media.size), stream_link, dl_link))
             os.remove(file_path)
 
-            await event.reply(msg_text.format(get_name(media)), humanbytes(media.size), stream_link, dl_link, reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺", url=stream_link), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻', url=dl_link)]]))
+            await event.reply(msg_text, buttons=[Button.url("sᴛʀᴇᴀᴍ🔺", url=stream_link), Button.url('ᴅᴏᴡɴʟᴏᴀᴅ🔻', url=dl_link)], link_preview=False, parse_mode = 'md')
 
         else:
             await event.reply("Reply to a valid media file with /link to generate a download link.")
