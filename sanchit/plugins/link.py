@@ -124,7 +124,7 @@ async def gen_link_handler(event):
             os.remove(file_path)
 
             
-await event.reply(text=msg_text.format(get_name(media)), humanbytes(media.size), stream_link, dl_link, reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺", url=stream_link), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻', url=dl_link)]]))
+    await event.reply(text=msg_text.format(get_name(media)), humanbytes(media.size), stream_link, dl_link, reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ🔺", url=stream_link), types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ🔻', url=dl_link)]]))
         else:
             await event.reply("Reply to a valid media file with /link to generate a download link.")
     except Exception as e:
