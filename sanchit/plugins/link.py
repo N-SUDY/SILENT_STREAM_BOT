@@ -28,58 +28,6 @@ msg_text ="""<b>‣ ʏᴏᴜʀ ʟɪɴᴋ ɢᴇɴᴇʀᴀᴛᴇᴅ ! 😎
 
 ‣ Tʜɪꜱ Iꜱ Aɴ Aᴅᴠᴀɴᴄᴇ Fɪʟᴇ Sᴛʀᴇᴀᴍ Bᴏᴛ Bʏ : [Tʜᴇ Sɪʟᴇɴᴛ Tᴇᴀᴍ](https://t.me/THE_SILENT_TEAMS) </b> 😆"""
 
-'''
-@Sanchit.on(NewMessage(incoming=True, pattern=r'^/link$'))
-async def gen_link_handler(bot, message):
-    try:
-        media = message.reply_to_message
-        if message.reply_to_message and (media.document or
-                                          media.video or
-                                          media.audio or
-                                          media.photo):
-            
-            log_msg = await media.copy(int(Telegram.CHANNEL_ID))
-            dl_link = f'{Server.BASE_URL}/dl/{message_id}?code={secret_code}'
-            tg_link = f'{Server.BASE_URL}/file/{message_id}?code={secret_code}'
-
-            await message.reply_text(
-                text=msg_text.format(get_name(log_msg), humanbytes(get_media_file_size(log_msg)), dl_link, tg_link),
-                quote=True,
-                disable_web_page_preview=True,
-                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("sᴛʀᴇᴀᴍ 🔺", url=tg_link),
-                                                    InlineKeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ 🔻', url=dl_link)]])
-            )                                  
-            
-        else:
-            await message.reply_text("Reply to a valid media file with `/link` to generate a download link.")
-    except Exception as e:
-        await message.reply_text(f"Error generating link: {e}")
-
-
-@Sanchit.on(events.NewMessage(pattern="/link"))
-async def gen_link_handler(event):
-    try:
-        reply_message = await event.get_reply_message()
-        if reply_message and (reply_message.document or
-                              reply_message.video or
-                              reply_message.audio or
-                              reply_message.photo):
-
-            media = await reply_message.media.download_media()
-            await client.send_file(channel_id, media, caption=msg_text.format(reply_message.file.name, humanbytes(reply_message.file.size), f'{base_url}/dl/{event.message.id}?code={secret_code}', f'{base_url}/file/{event.message.id}?code={secret_code}'))
-            os.remove(media)
-
-            await event.reply(
-                text=msg_text.format(reply_message.file.name, humanbytes(reply_message.file.size), f'{base_url}/dl/{event.message.id}?code={secret_code}', f'{base_url}/file/{event.message.id}?code={secret_code}'),
-                reply_markup=types.ReplyKeyboardMarkup([[types.KeyboardButton("sᴛʀᴇᴀᴍ 🔺"),
-                                                          types.KeyboardButton('ᴅᴏᴡɴʟᴏᴀᴅ 🔻')]])
-            )
-        else:
-            await event.reply("Reply to a valid media file with /link to generate a download link.")
-    except Exception as e:
-        await event.reply(f"Error generating link: {e}")
-        '''
-
 def get_name(message):
     if message.file.name:
         return message.file.name
